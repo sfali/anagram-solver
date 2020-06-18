@@ -3,12 +3,10 @@ package com.alphasystem.anagram.http
 import io.vertx.core.Vertx
 import io.vertx.ext.web.client.WebClient
 import io.vertx.ext.web.client.WebClientOptions
+import io.vertx.ext.web.codec.BodyCodec
 import io.vertx.junit5.VertxExtension
 import io.vertx.junit5.VertxTestContext
-import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -25,7 +23,7 @@ class TestHttpServer {
     webClient = WebClient.create(
       vertex, WebClientOptions()
         .setDefaultHost("localhost")
-        .setDefaultPort(8888)
+        .setDefaultPort(8080)
     )
   }
 
@@ -35,7 +33,23 @@ class TestHttpServer {
   }
 
   @Test
-  fun test() {
+  fun testIsAnagrams(context: VertxTestContext) =
+    webClient
+      .get("/anagrams/cinema/iceman")
+      .`as`(BodyCodec.string())
+      .send(context.succeeding {
+        Assertions.assertEquals("""{"areAnagrams": true}""", it.body())
+        context.completeNow()
+      })
 
-  }
+  @Test
+  fun testIsInvalidAnagrams(context: VertxTestContext) =
+    webClient
+      .get("/anagrams/abca/abcd")
+      .`as`(BodyCodec.string())
+      .send(context.succeeding {
+        Assertions.assertEquals("""{"areAnagrams": false}""", it.body())
+        context.completeNow()
+      })
+
 }
