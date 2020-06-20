@@ -1,6 +1,7 @@
 package com.alphasystem.anagram.util
 
 import com.alphasystem.anagram.BASE_VALUE
+import com.alphasystem.anagram.SpecialCharactersRegex
 import com.alphasystem.anagram.toFrequencyArray
 
 class AnagramSolver(source: String, private val target: String) {
@@ -16,6 +17,8 @@ class AnagramSolver(source: String, private val target: String) {
     var result = true
 
     target
+      .replace(SpecialCharactersRegex, "")
+      .replace(" ", "")
       .toLowerCase()
       .chars()
       .forEach {

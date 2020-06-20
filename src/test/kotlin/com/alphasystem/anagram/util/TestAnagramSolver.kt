@@ -23,4 +23,10 @@ class TestAnagramSolver {
     Assertions.assertEquals(true, solver.isAnagram())
   }
 
+  @Test
+  fun testValidAnagramWithSpace() {
+    val solver = AnagramSolver("Tom Marvolo Riddle", "I am Lord Voldemort")
+    Assertions.assertEquals(true, solver.isAnagram())
+  }
+
 }

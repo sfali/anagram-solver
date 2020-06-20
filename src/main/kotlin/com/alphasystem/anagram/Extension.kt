@@ -2,12 +2,13 @@ package com.alphasystem.anagram
 
 const val BASE_VALUE = 'a'.toInt()
 
-private const val SpecialCharactersRegex = "[._- ]*"
+const val SpecialCharactersRegex = "[._-]*"
 
 fun String.toFrequencyArray(): IntArray {
   val frequencyArray = IntArray(26)
   this
     .replace(SpecialCharactersRegex, "")
+    .replace(" ", "")
     .toLowerCase()
     .chars()
     .forEach {
