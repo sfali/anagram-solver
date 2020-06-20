@@ -1,24 +1,16 @@
 package com.alphasystem.anagram.util
 
-class AnagramSolver(private val source: String, private val target: String) {
+import com.alphasystem.anagram.BASE_VALUE
+import com.alphasystem.anagram.toFrequencyArray
 
-  private val frequencyArray = IntArray(26)
+class AnagramSolver(source: String, private val target: String) {
+
+  private val frequencyArray = source.toFrequencyArray()
 
   fun isAnagram(): Boolean {
     // TODO: validate input strings
-    populateFrequencyArray()
     return validateAnagram()
   }
-
-  private fun populateFrequencyArray() =
-    source
-      .toLowerCase()
-      .chars()
-      .forEach {
-        val index = it - BASE_VALUE
-        // for each index increment the value
-        frequencyArray[index] = frequencyArray[index] + 1
-      }
 
   private fun validateAnagram(): Boolean {
     var result = true
@@ -50,12 +42,5 @@ class AnagramSolver(private val source: String, private val target: String) {
     }
 
     return result
-  }
-
-  companion object {
-    /*
-     * Integer value for 'a'
-     */
-    private const val BASE_VALUE = 'a'.toInt()
   }
 }
