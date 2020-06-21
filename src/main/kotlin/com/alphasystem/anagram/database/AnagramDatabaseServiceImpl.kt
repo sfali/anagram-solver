@@ -19,7 +19,7 @@ class AnagramDatabaseServiceImpl(val pgPool: PgPool) : AnagramDatabaseService {
         {
           val maybeRow = it.firstOrNull()
           maybeRow?.let { row ->
-            val anagram = Anagram(row.getString("frequency"), row.getStringArray("words").toList())
+            val anagram = Anagram(row.getStringArray("words").toList())
             handler.handle(Future.succeededFuture(anagram))
           } ?: handler.handle(Future.succeededFuture(null))
         }, // onSuccess

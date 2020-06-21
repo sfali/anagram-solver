@@ -5,12 +5,10 @@ import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 
 @DataObject
-data class Anagram(val id: String, val words: List<String>) {
+data class Anagram(val anagrams: List<String>) {
   constructor(jsonObject: JsonObject) : this(
-    jsonObject.getString("frequency"),
     jsonObject.getJsonArray("words").toList() as List<String>
   )
 
-  fun toJson(): JsonObject = JsonObject().put("frequency", id).put("words", JsonArray(words))
-
+  fun toJson(): JsonObject = JsonObject().put("words", JsonArray(anagrams))
 }

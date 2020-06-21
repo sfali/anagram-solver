@@ -1,6 +1,11 @@
 package com.alphasystem.anagram.http
 
+import com.alphasystem.anagram.database.AnagramDatabaseServiceFactory
+import com.alphasystem.anagram.database.AnagramDatabaseVerticle
+import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService
+import com.alphasystem.anagram.toFrequencyString
 import com.alphasystem.anagram.util.AnagramSolver
+import io.vertx.core.json.Json
 import io.vertx.rxjava.core.AbstractVerticle
 import io.vertx.rxjava.ext.web.Router
 import io.vertx.rxjava.ext.web.RoutingContext
@@ -11,9 +16,19 @@ class HttpServerVerticle : AbstractVerticle() {
 
   private val logger = LoggerFactory.getLogger(HttpServerVerticle::class.java)
 
+  private lateinit var dbService: AnagramDatabaseService
+
   override fun rxStart(): Completable {
+    dbService =
+      AnagramDatabaseServiceFactory
+        .createReactiveProxy(
+          vertx.delegate,
+          AnagramDatabaseVerticle.DATABASE_SERVICE_ADDRESS
+        )
+
     val router = Router.router(vertx)
     router.get("/").handler { indexHandler(it) }
+    router.get("/anagrams/:string1").handler { findAnagramsHandler(it) }
     router.get("/anagrams/:string1/:string2").handler { isAnagramHandler(it) }
     return vertx
       .createHttpServer()
@@ -38,6 +53,39 @@ class HttpServerVerticle : AbstractVerticle() {
       .response()
       .putHeader("Content-Type", "application/json")
       .end("""{"areAnagrams": $anagram}""")
+  }
+
+  private fun findAnagramsHandler(context: RoutingContext) {
+    val source = context.request().getParam("string1")
+    logger.info("Find anagram, source={}", source)
+    dbService
+      .rxFindAnagrams(source.toFrequencyString())
+      .subscribe(
+        {
+          if (it == null) {
+            context
+              .response()
+              .setStatusCode(404)
+              .setStatusMessage("Not Found")
+              .end()
+          } else {
+            context
+              .response()
+              .setStatusCode(200)
+              .setStatusMessage("OK")
+              .putHeader("Content-Type", "application/json")
+              .end(Json.encodePrettily(it))
+          }
+        },
+        {
+          logger.error("Unable to find anagram: source=$source", it)
+          context
+            .response()
+            .setStatusCode(503)
+            .setStatusMessage("Internal Error")
+            .end()
+        }
+      )
   }
 
   companion object {

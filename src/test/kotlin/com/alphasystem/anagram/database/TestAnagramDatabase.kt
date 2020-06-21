@@ -57,7 +57,7 @@ class TestAnagramDatabase {
       context.succeeding {
         println(it)
         it?.let {
-          Assertions.assertEquals(Anagram("10101000100011000000000000", listOf("anemic", "cinema", "iceman")), it)
+          Assertions.assertEquals(Anagram(listOf("anemic", "cinema", "iceman")), it)
           context.completeNow()
         } ?: context.failNow(java.lang.RuntimeException("Should have returned record: $id"))
       })
