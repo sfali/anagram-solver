@@ -8,25 +8,25 @@ class TestAnagramSolver {
   @Test
   fun testValidAnagram() {
     val solver = AnagramSolver("cinema", "iceman")
-    Assertions.assertEquals(true, solver.isAnagram())
+    Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
   }
 
   @Test
   fun testInValidAnagram() {
     val solver = AnagramSolver("abca", "abcd")
-    Assertions.assertEquals(false, solver.isAnagram())
+    Assertions.assertEquals(false, solver.areAnagrams().areAnagrams)
   }
 
   @Test
   fun testValidAnagramWithRepetition() {
     val solver = AnagramSolver("moon", "mono")
-    Assertions.assertEquals(true, solver.isAnagram())
+    Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
   }
 
   @Test
   fun testValidAnagramWithSpace() {
     val solver = AnagramSolver("Tom Marvolo Riddle", "I am Lord Voldemort")
-    Assertions.assertEquals(true, solver.isAnagram())
+    Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
   }
 
 }
