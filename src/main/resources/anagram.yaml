@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  - url: http://127.0.0.1:8080
+paths:
+  /anagrams/{string1}/{string2}:
+    get:
+      summary: Info for a specific pet
+      operationId: areAnagrams
+      tags:
+        - areAnagrams
+      parameters:
+        - name: string1
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+        - name: string2
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnagramsResult"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /anagrams/{string1}:
+    get:
+      summary: Info for a specific pet
+      operationId: findAnagrams
+      tags:
+        - findAnagrams
+      parameters:
+        - name: string1
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        200:
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Anagram"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    AnagramsResult:
+      type: object
+      required:
+        - areAnagrams
+      properties:
+        areAnagrams:
+          type: boolean
+    Anagram:
+      type: object
+      required:
+        - anagrams
+      properties:
+        anagrams:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string

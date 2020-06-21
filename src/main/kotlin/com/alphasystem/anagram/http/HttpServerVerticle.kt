@@ -6,10 +6,13 @@ import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService
 import com.alphasystem.anagram.toFrequencyString
 import com.alphasystem.anagram.util.AnagramSolver
 import io.reactivex.Completable
+import io.vertx.core.http.HttpServerOptions
 import io.vertx.core.json.Json
+import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.reactivex.core.AbstractVerticle
-import io.vertx.reactivex.ext.web.Router
+import io.vertx.reactivex.core.http.HttpServer
 import io.vertx.reactivex.ext.web.RoutingContext
+import io.vertx.reactivex.ext.web.api.contract.openapi3.OpenAPI3RouterFactory
 import org.slf4j.LoggerFactory
 
 class HttpServerVerticle : AbstractVerticle() {
@@ -17,6 +20,7 @@ class HttpServerVerticle : AbstractVerticle() {
   private val logger = LoggerFactory.getLogger(HttpServerVerticle::class.java)
 
   private lateinit var dbService: AnagramDatabaseService
+  private lateinit var httpServer: HttpServer
 
   override fun rxStart(): Completable {
     dbService =
@@ -26,15 +30,23 @@ class HttpServerVerticle : AbstractVerticle() {
           AnagramDatabaseVerticle.DATABASE_SERVICE_ADDRESS
         )
 
-    val router = Router.router(vertx)
-    router.get("/").handler { indexHandler(it) }
-    router.get("/anagrams/:string1").handler { findAnagramsHandler(it) }
-    router.get("/anagrams/:string1/:string2").handler { isAnagramHandler(it) }
-    return vertx
-      .createHttpServer()
-      .requestHandler(router)
-      .rxListen(8080, "0.0.0.0")
+    httpServer = vertx.createHttpServer(HttpServerOptions().setPort(8080).setHost("0.0.0.0"))
+
+    return OpenAPI3RouterFactory
+      .rxCreate(vertx, "anagram.yaml")
+      .flatMap {
+        it
+          .addHandlerByOperationId("areAnagrams") { context -> isAnagramHandler(context) }
+          .addHandlerByOperationId("findAnagrams") { context -> findAnagramsHandler(context) }
+        httpServer
+          .requestHandler(it.router)
+          .rxListen()
+      }
       .ignoreElement()
+  }
+
+  override fun stop() {
+    httpServer.close()
   }
 
   private fun indexHandler(context: RoutingContext) {
