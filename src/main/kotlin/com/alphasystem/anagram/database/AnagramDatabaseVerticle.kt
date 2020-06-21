@@ -1,8 +1,8 @@
 package com.alphasystem.anagram.database
 
 import io.vertx.pgclient.PgConnectOptions
-import io.vertx.rxjava.core.AbstractVerticle
-import io.vertx.rxjava.pgclient.PgPool
+import io.vertx.reactivex.core.AbstractVerticle
+import io.vertx.reactivex.pgclient.PgPool
 import io.vertx.serviceproxy.ServiceBinder
 import io.vertx.sqlclient.PoolOptions
 

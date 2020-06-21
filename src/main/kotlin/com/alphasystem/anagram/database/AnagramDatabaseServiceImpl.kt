@@ -3,8 +3,8 @@ package com.alphasystem.anagram.database
 import io.vertx.core.AsyncResult
 import io.vertx.core.Future
 import io.vertx.core.Handler
-import io.vertx.rxjava.pgclient.PgPool
-import io.vertx.rxjava.sqlclient.Tuple
+import io.vertx.reactivex.pgclient.PgPool
+import io.vertx.reactivex.sqlclient.Tuple
 import org.slf4j.LoggerFactory
 
 class AnagramDatabaseServiceImpl(val pgPool: PgPool) : AnagramDatabaseService {

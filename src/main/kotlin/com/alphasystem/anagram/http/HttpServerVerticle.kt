@@ -5,12 +5,12 @@ import com.alphasystem.anagram.database.AnagramDatabaseVerticle
 import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService
 import com.alphasystem.anagram.toFrequencyString
 import com.alphasystem.anagram.util.AnagramSolver
+import io.reactivex.Completable
 import io.vertx.core.json.Json
-import io.vertx.rxjava.core.AbstractVerticle
-import io.vertx.rxjava.ext.web.Router
-import io.vertx.rxjava.ext.web.RoutingContext
+import io.vertx.reactivex.core.AbstractVerticle
+import io.vertx.reactivex.ext.web.Router
+import io.vertx.reactivex.ext.web.RoutingContext
 import org.slf4j.LoggerFactory
-import rx.Completable
 
 class HttpServerVerticle : AbstractVerticle() {
 
@@ -34,7 +34,7 @@ class HttpServerVerticle : AbstractVerticle() {
       .createHttpServer()
       .requestHandler(router)
       .rxListen(8080, "0.0.0.0")
-      .toCompletable()
+      .ignoreElement()
   }
 
   private fun indexHandler(context: RoutingContext) {

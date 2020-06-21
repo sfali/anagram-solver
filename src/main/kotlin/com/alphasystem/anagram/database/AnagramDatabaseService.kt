@@ -6,7 +6,7 @@ import io.vertx.codegen.annotations.VertxGen
 import io.vertx.core.AsyncResult
 import io.vertx.core.Handler
 import io.vertx.core.Vertx
-import io.vertx.rxjava.pgclient.PgPool
+import io.vertx.reactivex.pgclient.PgPool
 import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService as ReactiveAnagramDatabaseService
 
 @VertxGen
