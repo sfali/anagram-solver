@@ -20,9 +20,6 @@ interface AnagramDatabaseService {
 object AnagramDatabaseServiceFactory {
   fun create(pgPool: PgPool): AnagramDatabaseService = AnagramDatabaseServiceImpl(pgPool)
 
-  fun createProxy(vertx: Vertx, address: String): AnagramDatabaseServiceVertxEBProxy =
-    AnagramDatabaseServiceVertxEBProxy(vertx, address)
-
-  fun createReactiveProxy(vertx: Vertx, address: String): ReactiveAnagramDatabaseService =
+  fun createProxy(vertx: Vertx, address: String): ReactiveAnagramDatabaseService =
     ReactiveAnagramDatabaseService(AnagramDatabaseServiceVertxEBProxy(vertx, address))
 }

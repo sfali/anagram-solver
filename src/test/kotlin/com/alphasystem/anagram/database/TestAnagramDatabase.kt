@@ -1,5 +1,6 @@
 package com.alphasystem.anagram.database
 
+import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService
 import com.alphasystem.anagram.toFrequencyString
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
@@ -55,7 +56,6 @@ class TestAnagramDatabase {
     service.findAnagrams(
       id,
       context.succeeding {
-        println(it)
         it?.let {
           Assertions.assertEquals(Anagram(listOf("anemic", "cinema", "iceman")), it)
           context.completeNow()

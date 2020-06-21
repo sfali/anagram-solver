@@ -21,7 +21,7 @@ class HttpServerVerticle : AbstractVerticle() {
   override fun rxStart(): Completable {
     dbService =
       AnagramDatabaseServiceFactory
-        .createReactiveProxy(
+        .createProxy(
           vertx.delegate,
           AnagramDatabaseVerticle.DATABASE_SERVICE_ADDRESS
         )
