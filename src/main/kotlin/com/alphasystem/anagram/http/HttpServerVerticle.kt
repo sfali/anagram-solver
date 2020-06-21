@@ -8,7 +8,6 @@ import com.alphasystem.anagram.util.AnagramSolver
 import io.reactivex.Completable
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.core.json.Json
-import io.vertx.ext.web.handler.StaticHandler
 import io.vertx.reactivex.core.AbstractVerticle
 import io.vertx.reactivex.core.http.HttpServer
 import io.vertx.reactivex.ext.web.RoutingContext
