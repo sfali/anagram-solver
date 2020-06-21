@@ -48,6 +48,20 @@ class HttpServerVerticle : AbstractVerticle() {
   private fun isAnagramHandler(context: RoutingContext) {
     val source = context.request().getParam("string1")
     val target = context.request().getParam("string2")
+    if (!source.matches(IS_ANAGRAMS_VALIDATION_REGEX) ||
+      !target.matches(IS_ANAGRAMS_VALIDATION_REGEX)) {
+      context
+        .response()
+        .setStatusCode(400)
+        .setStatusMessage("BadRequest")
+        .end(
+          JsonObject()
+            .put("code", "BadRequest")
+            .put("message", "Invalid inputs: $source, $target")
+            .encodePrettily()
+        )
+      return
+    }
     logger.info("isAnagram: source={}, target={}", source, target)
     val result = AnagramSolver(source, target).areAnagrams()
     context
@@ -118,5 +132,6 @@ class HttpServerVerticle : AbstractVerticle() {
   companion object {
     const val DEPLOYMENT_NAME = "com.alphasystem.anagram.http.HttpServerVerticle"
     val FIND_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z]*".toRegex()
+    val IS_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z .-]*".toRegex()
   }
 }
