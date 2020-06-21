@@ -39,4 +39,8 @@ class HttpServerVerticle : AbstractVerticle() {
       .putHeader("Content-Type", "application/json")
       .end("""{"areAnagrams": $anagram}""")
   }
+
+  companion object {
+    const val DEPLOYMENT_NAME = "com.alphasystem.anagram.http.HttpServerVerticle"
+  }
 }

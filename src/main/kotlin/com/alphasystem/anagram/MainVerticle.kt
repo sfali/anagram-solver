@@ -1,24 +1,18 @@
 package com.alphasystem.anagram
 
-import io.vertx.core.AbstractVerticle
-import io.vertx.core.DeploymentOptions
-import io.vertx.core.Promise
+import com.alphasystem.anagram.database.AnagramDatabaseVerticle
+import com.alphasystem.anagram.http.HttpServerVerticle
+import io.reactivex.Completable
+import io.vertx.pgclient.PgConnectOptions
+import io.vertx.reactivex.core.AbstractVerticle
 
 class MainVerticle : AbstractVerticle() {
 
-  override fun start(startPromise: Promise<Void>) {
-    val httpVerticlePromise = Promise.promise<String>()
-    vertx.deployVerticle(
-      "com.alphasystem.anagram.http.HttpServerVerticle",
-      DeploymentOptions(), httpVerticlePromise
-    )
-    httpVerticlePromise.future()
-      .onComplete {
-        if (it.succeeded()) {
-          startPromise.complete()
-        } else {
-          startPromise.fail(it.cause())
-        }
-      }
+  override fun rxStart(): Completable {
+    return vertx
+      .rxDeployVerticle(AnagramDatabaseVerticle(PgConnectOptions.fromEnv()))
+      .flatMap {
+        vertx.rxDeployVerticle(HttpServerVerticle.DEPLOYMENT_NAME)
+      }.ignoreElement()
   }
 }
