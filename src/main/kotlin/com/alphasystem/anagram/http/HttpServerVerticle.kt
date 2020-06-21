@@ -48,11 +48,11 @@ class HttpServerVerticle : AbstractVerticle() {
     val source = context.request().getParam("string1")
     val target = context.request().getParam("string2")
     logger.info("isAnagram: source={}, target={}", source, target)
-    val anagram = AnagramSolver(source, target).isAnagram()
+    val result = AnagramSolver(source, target).areAnagrams()
     context
       .response()
       .putHeader("Content-Type", "application/json")
-      .end("""{"areAnagrams": $anagram}""")
+      .end(Json.encodePrettily(result))
   }
 
   private fun findAnagramsHandler(context: RoutingContext) {

@@ -8,12 +8,12 @@ class AnagramSolver(source: String, private val target: String) {
 
   private val frequencyArray = source.toFrequencyArray()
 
-  fun isAnagram(): Boolean {
+  fun areAnagrams(): AnagramsResult {
     // TODO: validate input strings
     return validateAnagram()
   }
 
-  private fun validateAnagram(): Boolean {
+  private fun validateAnagram(): AnagramsResult {
     var result = true
 
     target
@@ -44,6 +44,8 @@ class AnagramSolver(source: String, private val target: String) {
         }
     }
 
-    return result
+    return AnagramsResult(result)
   }
 }
+
+data class AnagramsResult(val areAnagrams: Boolean)

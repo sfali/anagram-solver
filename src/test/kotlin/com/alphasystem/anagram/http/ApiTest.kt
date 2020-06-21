@@ -3,6 +3,7 @@ package com.alphasystem.anagram.http
 import com.alphasystem.anagram.database.Anagram
 import com.alphasystem.anagram.database.AnagramDatabaseServiceFactory
 import com.alphasystem.anagram.database.AnagramDatabaseVerticle
+import com.alphasystem.anagram.util.AnagramsResult
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
@@ -61,7 +62,7 @@ class ApiTest {
       .get("/anagrams/cinema/iceman")
       .`as`(BodyCodec.string())
       .send(context.succeeding {
-        Assertions.assertEquals("""{"areAnagrams": true}""", it.body())
+        Assertions.assertEquals(Json.encodePrettily(AnagramsResult(true)), it.body())
         context.completeNow()
       })
   }
@@ -72,7 +73,7 @@ class ApiTest {
       .get("/anagrams/abca/abcd")
       .`as`(BodyCodec.string())
       .send(context.succeeding {
-        Assertions.assertEquals("""{"areAnagrams": false}""", it.body())
+        Assertions.assertEquals(Json.encodePrettily(AnagramsResult(false)), it.body())
         context.completeNow()
       })
   }
