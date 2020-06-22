@@ -3,7 +3,6 @@ package com.alphasystem.anagram.http
 import com.alphasystem.anagram.database.AnagramDatabaseServiceFactory
 import com.alphasystem.anagram.database.AnagramDatabaseVerticle
 import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService
-import com.alphasystem.anagram.toFrequencyString
 import com.alphasystem.anagram.util.AnagramSolver
 import io.reactivex.Completable
 import io.vertx.core.json.Json
@@ -87,7 +86,7 @@ class HttpServerVerticle : AbstractVerticle() {
     }
     logger.info("Find anagram, source={}", source)
     dbService
-      .rxFindAnagrams(source.toFrequencyString())
+      .rxFindAnagrams(source)
       .subscribe(
         {
           if (it == null) {

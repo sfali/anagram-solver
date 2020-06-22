@@ -81,10 +81,10 @@ class ApiTest {
   @Test
   fun testGetAnagrams(context: VertxTestContext) {
     webClient
-      .get("/anagrams/cinema")
+      .get("/anagrams/moon")
       .`as`(BodyCodec.string())
       .send(context.succeeding {
-        Assertions.assertEquals(Json.encodePrettily(Anagram(listOf("anemic", "cinema", "iceman"))), it.body())
+        Assertions.assertEquals(Json.encodePrettily(Anagram(listOf("mono", "moon", "mon", "mn", "mo", "nm", "no", "on"))), it.body())
         context.completeNow()
       })
   }

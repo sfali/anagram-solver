@@ -13,7 +13,7 @@ import com.alphasystem.anagram.database.reactivex.AnagramDatabaseService as Reac
 @ProxyGen
 interface AnagramDatabaseService {
   @Fluent
-  fun findAnagrams(id: String, handler: Handler<AsyncResult<Anagram>>): AnagramDatabaseService
+  fun findAnagrams(word: String, handler: Handler<AsyncResult<Anagram>>): AnagramDatabaseService
 
 }
 

@@ -108,7 +108,11 @@ curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/cinem
 .Result
 ```
 {
-  "anagrams" : [ "anemic", "cinema", "iceman" ]
+  "anagrams" : [ "anemic", "cinema", "iceman", "amine", "amnic", "anime", "maine", "manic", "minae", "mince", "acme",
+"acne", "amen", "cain", "came", "cane", "inca", "mace", "main", "mane", "mcia", "mean", "mica", "mice", "mien", "mina",
+"mine", "name", "nice", "ace", "aec", "aim", "ain", "ane", "ani", "cam", "can", "cia", "cim", "ecm", "ice", "inc",
+"mac", "man", "mei", "men", "mic", "min", "nac", "nec", "nim", "ac", "ai", "am", "an", "ca", "ce", "ci", "cm", "ea",
+"ec", "em", "en", "ia", "ic", "ie", "in", "ma", "mc", "me", "mi", "mn", "na", "nc", "ne", "ni", "nm" ]
 }
 ```
 ****
@@ -132,18 +136,7 @@ curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/abced
 curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/abced
 ****
 
-****
-.Result
-```
-{
-  "code" : "NotFound",
-  "message" : "No anagram found with the given word: abced"
-}
-```
-****
-
 == TODOs
 
 [square]
 * Use of embedded postgres for testing
-* Find anagrams of the given word including words derived from source word
