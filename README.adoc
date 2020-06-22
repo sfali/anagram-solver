@@ -1,31 +1,65 @@
-= Starter
+= Anagram Solver
 
-image:https://img.shields.io/badge/vert.x-3.9.1-purple.svg[link="https://vertx.io"]
 
-This application was generated using http://start.vertx.io
+The application exposes two end points:
+
+1. `/anagrams/{string1}/{string2}`
+
+    * Returns a 200 - OK with the following JSON payload:
+
+      {
+        "areAnagrams": true | false
+      }
+
+        where areAnagrams is true or false, depending on whether string1 and string2 are anagrams of each other.
+
+    * Returns a 400 - Bad Request, if either of _string1_ or _string2_ are not valid, the strings must be letters a-z
+      (case in-sensitive) and can contain following characters, a period (.), a hyphen (-), an apostrophe ('), or a space ( )
+
+1. `/anagrams/{string1}`
+
+    * Returns a 200 - OK with the following JSON payload:
+
+      {
+        "anagrams": []
+      }
+
+     where anagrams is an array of all possible anagrams of _string1_
+
+    * Returns a 400 - Bad Request, if the given _string1_ is not valid, the strings must be letters a-z
+      (case in-sensitive) and must not contain any other character
 
 == Building
 
-To launch your tests:
+=== To launch your tests:
+Because of the dependency on Postgres database at this moment postgres database has be running in order to run tests.
+
+*TODO:* Use embedded postgres
+
 ```
-./gradlew clean test
+    docker-compose -f docker-compose-db.yml up
+    ./gradlew clean test
+    docker-compose down
 ```
 
-To package your application:
+==== To package your application:
 ```
-./gradlew clean assemble
-```
-
-To run your application:
-```
-./gradlew clean run
+    ./gradlew clean assemble
 ```
 
-== Help
+==== To run your application:
+```
+    ./gradlew clean run
+```
 
-* https://vertx.io/docs/[Vert.x Documentation]
-* https://stackoverflow.com/questions/tagged/vert.x?sort=newest&pageSize=15[Vert.x Stack Overflow]
-* https://groups.google.com/forum/?fromgroups#!forum/vertx[Vert.x User Group]
-* https://gitter.im/eclipse-vertx/vertx-users[Vert.x Gitter]
+=== To create docker image
+```
+    ./gradlew clean assemble
+    ./gradlew docker
+```
 
+=== To run application in dockerize container
+```
+    docker-compose up
+```
 
