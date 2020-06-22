@@ -132,6 +132,6 @@ class HttpServerVerticle : AbstractVerticle() {
   companion object {
     const val DEPLOYMENT_NAME = "com.alphasystem.anagram.http.HttpServerVerticle"
     val FIND_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z]*".toRegex()
-    val IS_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z .-]*".toRegex()
+    val IS_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z-' .]*".toRegex()
   }
 }

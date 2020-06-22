@@ -8,17 +8,13 @@ class AnagramSolver(source: String, private val target: String) {
 
   private val frequencyArray = source.toFrequencyArray()
 
-  fun areAnagrams(): AnagramsResult {
-    // TODO: validate input strings
-    return validateAnagram()
-  }
+  fun areAnagrams(): AnagramsResult = validateAnagram()
 
   private fun validateAnagram(): AnagramsResult {
     var result = true
 
     target
       .replace(SpecialCharactersRegex, "")
-      .replace(" ", "")
       .toLowerCase()
       .chars()
       .forEach {

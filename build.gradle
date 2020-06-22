@@ -86,7 +86,7 @@ run {
 }
 
 docker {
-  dependsOn shadowJar
+  dependsOn assemble
   name "${project.name}:${project.version}"
   files "$buildDir/libs/${project.name}-${project.version}-fat.jar"
   buildArgs([

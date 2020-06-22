@@ -29,4 +29,16 @@ class TestAnagramSolver {
     Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
   }
 
+  @Test
+  fun testValidAnagramWithSpecialCharacters() {
+    val solver = AnagramSolver("Church of Scientology", "rich-chosen goofy cult")
+    Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
+  }
+
+  @Test
+  fun testValidAnagramWithSpecialCharacters2() {
+    val solver = AnagramSolver("McDonald's restaurants", "Uncle Sam's standard rot")
+    Assertions.assertEquals(true, solver.areAnagrams().areAnagrams)
+  }
+
 }
