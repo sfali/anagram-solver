@@ -1,5 +1,38 @@
 = Anagram Solver
 
+This application finds all possible anagrams of a word and finds whether two strings are anagrams of each other.
+
+****
+*What is an anagram*
+
+a word, phrase, or name formed by rearranging the letters of another, such as cinema, formed from iceman.
+****
+
+== Implementation Notes
+
+In order to determine whether two strings are anagrams of each other this application uses following algorithm.
+
+NOTE: For the sake of brevity this example uses first five characters of alphabets.
+
+Lets, for example, we need to find out whether _abccda_ and _cadbac_ are anagrams of each other. Creates an array of
+size _5_ and initialize with _0_, this array will keep track how many times each character of first string appears in the
+string, remove any special character, for example space, hyphen, or apostrophe. By scanning first string the resultant
+array will be:
+
+|===
+
+|a |b |c |d |e
+|2 |1 |2 |1 |0
+|===
+
+Now start scanning characters of second string and start decrementing number of occurrence of each character in the
+array if two strings are anagrams of each other, then the array will have _0_ in each index, otherwise two strings are
+not anagrams of each other.
+
+In order to find possible anagrams of a given word, the application contains more than 140K words taken from Princeton
+University https://wordnet.princeton.edu/[WordNet(R)] online dictionary. The database maps frequency of the
+characters in the string with the all possible anagrams for that frequency, for example, words _anemic_, _cinema_,
+and _iceman_ are anagrams of each other and hence frequency string for these words is _10101000100011000000000000_.
 
 The application exposes two end points:
 
@@ -29,12 +62,13 @@ The application exposes two end points:
     * Returns a 400 - Bad Request, if the given _string1_ is not valid, the strings must be letters a-z
       (case in-sensitive) and must not contain any other character
 
+    * Returns a 404 - Not Found, if the given _string1_ is not a proper English word and does not have in the database,
+      see implementation notes above.
+
 == Building
 
 === To launch your tests:
 Because of the dependency on Postgres database at this moment postgres database has be running in order to run tests.
-
-*TODO:* Use embedded postgres
 
 ```
     docker-compose -f docker-compose-db.yml up
@@ -63,3 +97,53 @@ Because of the dependency on Postgres database at this moment postgres database 
     docker-compose up
 ```
 
+== Examples using curl
+
+****
+.Command
+curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/cinema
+****
+
+****
+.Result
+```
+{
+  "anagrams" : [ "anemic", "cinema", "iceman" ]
+}
+```
+****
+
+****
+.Command
+curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/abced/abcr
+****
+
+****
+.Result
+```
+{
+  "areAnagrams" : false
+}
+```
+****
+
+****
+.Command
+curl -H 'Content-Type: application/json' -v http://localhost:8080/anagrams/abced
+****
+
+****
+.Result
+```
+{
+  "code" : "NotFound",
+  "message" : "No anagram found with the given word: abced"
+}
+```
+****
+
+== TODOs
+
+[square]
+* Use of embedded postgres for testing
+* Find anagrams of the given word including words derived from source word
