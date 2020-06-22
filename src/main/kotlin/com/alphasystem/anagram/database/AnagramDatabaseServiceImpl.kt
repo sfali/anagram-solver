@@ -11,7 +11,7 @@ class AnagramDatabaseServiceImpl(val pgPool: PgPool) : AnagramDatabaseService {
 
   private val logger = LoggerFactory.getLogger(AnagramDatabaseService::class.java)
 
-  override fun findAnagrams(id: String, handler: Handler<AsyncResult<Anagram?>>): AnagramDatabaseService {
+  override fun findAnagrams(id: String, handler: Handler<AsyncResult<Anagram>>): AnagramDatabaseService {
     pgPool
       .preparedQuery(FIND_ANAGRAM_QUERY)
       .rxExecute(Tuple.of(id))

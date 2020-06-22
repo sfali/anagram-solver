@@ -8,6 +8,7 @@ import com.alphasystem.anagram.util.AnagramSolver
 import io.reactivex.Completable
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.core.json.Json
+import io.vertx.core.json.JsonObject
 import io.vertx.reactivex.core.AbstractVerticle
 import io.vertx.reactivex.core.http.HttpServer
 import io.vertx.reactivex.ext.web.RoutingContext
@@ -58,6 +59,20 @@ class HttpServerVerticle : AbstractVerticle() {
   private fun isAnagramHandler(context: RoutingContext) {
     val source = context.request().getParam("string1")
     val target = context.request().getParam("string2")
+    if (!source.matches(IS_ANAGRAMS_VALIDATION_REGEX) ||
+      !target.matches(IS_ANAGRAMS_VALIDATION_REGEX)) {
+      context
+        .response()
+        .setStatusCode(400)
+        .setStatusMessage("BadRequest")
+        .end(
+          JsonObject()
+            .put("code", "BadRequest")
+            .put("message", "Invalid inputs: $source, $target")
+            .encodePrettily()
+        )
+      return
+    }
     logger.info("isAnagram: source={}, target={}", source, target)
     val result = AnagramSolver(source, target).areAnagrams()
     context
@@ -68,6 +83,19 @@ class HttpServerVerticle : AbstractVerticle() {
 
   private fun findAnagramsHandler(context: RoutingContext) {
     val source = context.request().getParam("string1")
+    if (!source.matches(FIND_ANAGRAMS_VALIDATION_REGEX)) {
+      context
+        .response()
+        .setStatusCode(400)
+        .setStatusMessage("BadRequest")
+        .end(
+          JsonObject()
+            .put("code", "BadRequest")
+            .put("message", "Invalid input: $source")
+            .encodePrettily()
+        )
+      return
+    }
     logger.info("Find anagram, source={}", source)
     dbService
       .rxFindAnagrams(source.toFrequencyString())
@@ -78,7 +106,12 @@ class HttpServerVerticle : AbstractVerticle() {
               .response()
               .setStatusCode(404)
               .setStatusMessage("Not Found")
-              .end()
+              .end(
+                JsonObject()
+                  .put("code", "NotFound")
+                  .put("message", "No anagram found with the given word: $source")
+                  .encodePrettily()
+              )
           } else {
             context
               .response()
@@ -92,14 +125,24 @@ class HttpServerVerticle : AbstractVerticle() {
           logger.error("Unable to find anagram: source=$source", it)
           context
             .response()
-            .setStatusCode(503)
-            .setStatusMessage("Internal Error")
-            .end()
+            .setStatusCode(500)
+            .setStatusMessage("InternalServerError")
+            .end(
+              JsonObject()
+                .put("code", "InternalServerError")
+                .put(
+                  "message",
+                  "The server encountered an unexpected condition which prevented it from fulfilling the request."
+                )
+                .encodePrettily()
+            )
         }
       )
   }
 
   companion object {
     const val DEPLOYMENT_NAME = "com.alphasystem.anagram.http.HttpServerVerticle"
+    val FIND_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z]*".toRegex()
+    val IS_ANAGRAMS_VALIDATION_REGEX = "[A-Za-z-' .]*".toRegex()
   }
 }
