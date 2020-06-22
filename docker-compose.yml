@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: anagram
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./db-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  anagram-solver:
+    image: anagram-solver:1.0.0-SNAPSHOT
+    container_name: anagram-solver
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      PGHOST: postgres
+      PGUSER: postgres
+      PGDATABASE: anagram
+      PGPASSWORD: postgres

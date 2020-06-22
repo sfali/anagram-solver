@@ -4,6 +4,7 @@ plugins {
   id 'application'
   id "idea"
   id 'com.github.johnrengelman.shadow' version '5.2.0'
+  id "com.palantir.docker" version "0.25.0"
 }
 
 group = 'com.alphasystem.anagram'
@@ -82,4 +83,13 @@ test {
 
 run {
   args = ['run', mainVerticleName, "--redeploy=$watchForChange", "--launcher-class=$mainClassName", "--on-redeploy=$doOnChange"]
+}
+
+docker {
+  dependsOn shadowJar
+  name "${project.name}:${project.version}"
+  files "$buildDir/libs/${project.name}-${project.version}-fat.jar"
+  buildArgs([
+    'JAR_FILE': "${project.name}-${project.version}-fat.jar"
+  ])
 }
